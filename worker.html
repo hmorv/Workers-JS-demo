@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Workers</title>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.js"></script>
+	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+	<div>
+		<label for="message">Message: </label>
+		<input type="text" id="message" class="form-control" />
+		<button type="button" id="send-message" class="btn">Send message</button>
+	</div>
+	<ul id="message-list"></ul>
+	<script>
+		// create the worker, point to the worker script
+		var worker = new Worker('./demo.js');
+
+		// receive messages from the worker
+		worker.onmessage = function (e) {
+			// The message is on the data property
+			var message = e.data;
+			
+			$('#message-list').append('<li>' + message + '</li>');
+		};
+
+		$('#send-message').click(function () {
+			var message = $('#message').val();
+			// Create message object
+			var messageObject = { message: message };
+
+			// send message
+			worker.postMessage(messageObject);
+		});
+
+		worker.postMessage({ status: "START" });
+	</script>
+</body>
+</html>
