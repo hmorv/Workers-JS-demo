@@ -14,17 +14,22 @@
 		<button type="button" id="send-message" class="btn">Send message</button>
 	</div>
 	<ul id="message-list"></ul>
+	<div id="result"></div>
 	<script>
-		// create the worker, point to the worker script
-		var worker = new Worker('./demo.js');
+		if(typeof(Worker) !== "undefined") {
+			// create the worker, point to the worker script
+			var worker = new Worker('./demo.js');
 
-		// receive messages from the worker
-		worker.onmessage = function (e) {
-			// The message is on the data property
-			var message = e.data;
-			
-			$('#message-list').append('<li>' + message + '</li>');
-		};
+			// receive messages from the worker
+			worker.onmessage = function (e) {
+				// The message is on the data property
+				var message = e.data;
+				
+				$('#message-list').append('<li>' + message + '</li>');
+			};
+		} else {
+        	document.getElementById("result").innerHTML = "Sorry, your browser does not support Web Workers...";
+    	}
 
 		$('#send-message').click(function () {
 			var message = $('#message').val();
